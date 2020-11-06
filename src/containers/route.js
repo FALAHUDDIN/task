@@ -18,16 +18,16 @@ export default function RouteControl() {
   // const [userIntend, setUserIntend] = useState("");
 
   useEffect(() => {
-    console.log(revShowToken, "kakakaka");
-    // setUserIntend(window.location.pathname);
+    setUserIntend(window.location.pathname);
   });
+
   // function
   const isLogin = () => {
     if (token) {
       return true;
-      // setUserIntend("/home");
+      setUserIntend("/home");
     } else {
-      // setUserIntend("/login");
+      setUserIntend("/login");
       return false;
     }
   };

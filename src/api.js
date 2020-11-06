@@ -37,7 +37,6 @@ export const createTasks = (formData) => {
 };
 
 export const updateTasks = (formData) => {
-  console.log("editsini", formData);
   const response = axios.put(server + "/tasks" + "/" + formData.id, formData, {
     headers: getHeader(),
   });

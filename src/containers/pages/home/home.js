@@ -17,9 +17,29 @@ export default function Home() {
     }),
     {
       isAddTask: false,
+      isEditTask: false,
     }
   );
   const [addTaskState, setAddTaskState] = useReducer(
+    (state, newState) => ({
+      ...state,
+      ...newState,
+    }),
+    {
+      taskName: "",
+    }
+  );
+  const [editTaskState, setEditTaskState] = useReducer(
+    (state, newState) => ({
+      ...state,
+      ...newState,
+    }),
+    {
+      taskName: "",
+      taskId: "",
+    }
+  );
+  const [filterTaskState, setFilterTaskState] = useReducer(
     (state, newState) => ({
       ...state,
       ...newState,
@@ -62,15 +82,25 @@ export default function Home() {
   const handleBtnAddTask = () => {
     if (homeState.isAddTask === true) {
       setHomeState({ isAddTask: false });
+      setAddTaskState({ taskName: "" });
     } else {
       setHomeState({ isAddTask: true });
     }
   };
-  const handleInputChange = (event) => {
-    const name = event.target.name;
-    setAddTaskState({
-      [name]: event.target.value,
-    });
+  const handleBtnEditTask = (id, name) => {
+    if (homeState.isEditTask === true) {
+      setHomeState({ isEditTask: false });
+      setEditTaskState({ taskId: "", taskName: "" });
+    } else {
+      setHomeState({ isEditTask: true });
+      setEditTaskState({ taskId: id, taskName: name });
+    }
+  };
+  const handleBtnDelTask = (id) => {
+    let formData = {
+      id: id,
+    };
+    onReqDeleteTasks(formData);
   };
   const handleAddTask = () => {
     if (addTaskState.taskName !== "") {
@@ -80,6 +110,22 @@ export default function Home() {
       onReqCreateTasks(formData);
     }
     handleResetAddTask();
+  };
+  const handleEditTask = () => {
+    if (editTaskState.taskName !== "") {
+      let formData = {
+        id: editTaskState.taskId,
+        name: editTaskState.taskName,
+      };
+      onReqUpdateTasks(formData);
+    }
+    handleResetAddTask();
+  };
+  const handleResetAddTask = () => {
+    setHomeState({
+      isAddTask: false,
+    });
+    setAddTaskState({ taskName: "" });
   };
   const handleBoxCrossTask = (id, tick) => {
     let formData = { id: id, completed: tick };
@@ -96,20 +142,25 @@ export default function Home() {
     }
     onReqUpdateTasks(formData);
   };
-  const handleBtnDelTask = (id) => {
-    let formData = {
-      id: id,
-    };
-    onReqDeleteTasks(formData);
-  };
-  const handleResetAddTask = () => {
-    setHomeState({
-      isAddTask: false,
+  const handleInputAddChange = (event) => {
+    const name = event.target.name;
+    setAddTaskState({
+      [name]: event.target.value,
     });
-    setAddTaskState({ taskName: "" });
+  };
+  const handleInputEditChange = (event) => {
+    const name = event.target.name;
+    setEditTaskState({
+      [name]: event.target.value,
+    });
+  };
+  const handleInputFilterChange = (event) => {
+    const name = event.target.name;
+    setFilterTaskState({
+      [name]: event.target.value,
+    });
   };
 
-  console.log(revShowTasks, "data");
   return (
     <div>
       {revShowDashboard ? (
@@ -122,10 +173,23 @@ export default function Home() {
                   name="taskName"
                   type="text"
                   value={addTaskState.taskName}
-                  onChange={handleInputChange}
+                  onChange={handleInputAddChange}
                   placeholder="Task Name"
                 ></input>
                 <button onClick={() => handleAddTask()}>+ New Task</button>
+              </div>
+            )}
+            {homeState.isEditTask && (
+              <div>
+                <div>Edit Task</div>
+                <input
+                  name="taskName"
+                  type="text"
+                  value={editTaskState.taskName}
+                  onChange={handleInputEditChange}
+                  placeholder="Task Name"
+                ></input>
+                <button onClick={() => handleEditTask()}>Edit Task</button>
               </div>
             )}
             <div>
@@ -153,7 +217,13 @@ export default function Home() {
               {revShowDashboard.tasksCompleted}/{revShowDashboard.totalTasks}
             </div>
             <div>Tasks:</div>
-            <input placeholder="Search by task name"></input>
+            <input
+              name="taskName"
+              type="text"
+              value={filterTaskState.taskName}
+              onChange={handleInputFilterChange}
+              placeholder="Search by task name"
+            ></input>
             <div>
               <button onClick={() => handleBtnAddTask()}>+ New Task</button>
             </div>
@@ -163,6 +233,14 @@ export default function Home() {
                 .sort(
                   (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
                 )
+                .filter((c) => {
+                  let found = c.name
+                    .toLowerCase()
+                    .includes(filterTaskState.taskName.toLowerCase());
+                  if (filterTaskState.taskName) {
+                    return found;
+                  } else return c;
+                })
                 .map((x, index) => {
                   let keyX = index;
                   return (
@@ -186,7 +264,9 @@ export default function Home() {
                       >
                         {x.name}
                       </span>
-                      <button>Edit</button>
+                      <button onClick={() => handleBtnEditTask(x._id, x.name)}>
+                        Edit
+                      </button>
                       <button onClick={() => handleBtnDelTask(x._id)}>
                         Delete
                       </button>
@@ -201,7 +281,7 @@ export default function Home() {
               name="taskName"
               type="text"
               value={addTaskState.taskName}
-              onChange={handleInputChange}
+              onChange={handleInputAddChange}
               placeholder="Task Name"
             ></input>
             <button onClick={() => handleAddTask()}>+ New Task</button>

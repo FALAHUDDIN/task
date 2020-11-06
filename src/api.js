@@ -23,7 +23,7 @@ export const showDashboard = () => {
 };
 
 export const showTasks = (formData) => {
-  const response = axios.get(server + "/tasks", formData, {
+  const response = axios.get(server + "/tasks", {
     headers: getHeader(),
   });
   return response;
@@ -44,7 +44,8 @@ export const updateTasks = (formData) => {
 };
 
 export const deleteTasks = (formData) => {
-  const response = axios.delete(server + "/tasks" + "/" + formData, {
+  console.log("testDel", formData);
+  const response = axios.delete(server + "/tasks" + "/" + formData.id, {
     headers: getHeader(),
   });
   return response;

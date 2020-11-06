@@ -26,6 +26,7 @@ export const reqShowTasks = (formData) => ({
 });
 export const RECEIVE_SHOW_TASKS = "RECEIVE_SHOW_TASKS";
 export const revShowTasks = (data) => ({ type: RECEIVE_SHOW_TASKS, data });
+export const FAILED_SHOW_TASKS = "FAILED_SHOW_TASKS";
 
 export const REQUEST_CREATE_TASKS = "REQUEST_CREATE_TASKS";
 export const reqCreateTasks = (formData) => ({
@@ -34,6 +35,7 @@ export const reqCreateTasks = (formData) => ({
 });
 export const RECEIVE_CREATE_TASKS = "RECEIVE_CREATE_TASKS";
 export const revCreateTasks = (data) => ({ type: RECEIVE_CREATE_TASKS, data });
+export const FAILED_CREATE_TASKS = "FAILED_CREATE_TASKS";
 
 export const REQUEST_UPDATE_TASKS = "REQUEST_UPDATE_TASKS";
 export const reqUpdateTasks = (formData) => ({
@@ -50,3 +52,4 @@ export const reqDeleteTasks = (formData) => ({
 });
 export const RECEIVE_DELETE_TASKS = "RECEIVE_DELETE_TASKS";
 export const revDeleteTasks = (data) => ({ type: RECEIVE_DELETE_TASKS, data });
+export const FAILED_DELETE_TASKS = "FAILED_DELETE_TASKS";

@@ -41,9 +41,8 @@ function* reqShowToken({ formData }) {
     yield put(revShowToken(response.data));
     Cookies.set("token", response.data.token);
     window.location.reload();
-    console.log(response.data);
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put({
         type: "FAILED_SHOW_TOKEN",
         data: e.response.data.msg,
@@ -60,7 +59,7 @@ function* reqShowDashboard({ formData }) {
     const response = yield call(showDashboard, formData);
     yield put(revShowDashboard(response.data));
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put({
         type: "FAILED_SHOW_DASHBOARD",
         data: e.response.data.msg,
@@ -74,9 +73,15 @@ function* reqShowDashboard({ formData }) {
 
 function* reqShowTasks({ formData }) {
   try {
-    const response = yield call(showToken, formData);
+    const response = yield call(showTasks, formData);
     yield put(revShowTasks(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      yield put({
+        type: "FAILED_SHOW_TASKS",
+        data: e.response.data.msg,
+      });
+    }
     if (developerMode) {
       console.log(e);
     }
@@ -85,11 +90,19 @@ function* reqShowTasks({ formData }) {
 
 function* reqCreateTasks({ formData }) {
   try {
-    const response = yield call(showToken, formData);
+    const response = yield call(createTasks, formData);
     yield put(revCreateTasks(response.data));
   } catch (e) {
-    if (developerMode) {
-      console.log(e);
+    {
+      if (e.response.status === 401) {
+        yield put({
+          type: "FAILED_CREATE_TASKS",
+          data: e.response.data.msg,
+        });
+      }
+      if (developerMode) {
+        console.log(e);
+      }
     }
   }
 }
@@ -107,9 +120,15 @@ function* reqUpdateTasks({ formData }) {
 
 function* reqDeleteTasks({ formData }) {
   try {
-    const response = yield call(showToken, formData);
+    const response = yield call(deleteTasks, formData);
     yield put(revDeleteTasks(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      yield put({
+        type: "FAILED_DELETE_TASKS",
+        data: e.response.data.msg,
+      });
+    }
     if (developerMode) {
       console.log(e);
     }

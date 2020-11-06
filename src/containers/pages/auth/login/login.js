@@ -23,8 +23,8 @@ export default function Login() {
   const errorMessage = useSelector((state) => state.errorMessage);
   const revShowToken = useSelector((state) => state.data);
   const dispatch = useDispatch();
-  const onReqShowToken = (bodyFormData) => {
-    return dispatch(reqShowToken(bodyFormData));
+  const onReqShowToken = (formData) => {
+    return dispatch(reqShowToken(formData));
   };
 
   //component mount, update, unmount
@@ -34,7 +34,6 @@ export default function Login() {
         errorMessage: errorMessage,
       });
     }
-    console.log(revShowToken, "laaaiii");
   }, [errorMessage, revShowToken]);
 
   //page function

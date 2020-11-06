@@ -22,7 +22,7 @@ export const showDashboard = () => {
   return response;
 };
 
-export const showTasks = (formData) => {
+export const showTasks = () => {
   const response = axios.get(server + "/tasks", {
     headers: getHeader(),
   });
@@ -37,14 +37,14 @@ export const createTasks = (formData) => {
 };
 
 export const updateTasks = (formData) => {
-  const response = axios.put(server + "/tasks" + "/" + formData, {
+  console.log("editsini", formData);
+  const response = axios.put(server + "/tasks" + "/" + formData.id, formData, {
     headers: getHeader(),
   });
   return response;
 };
 
 export const deleteTasks = (formData) => {
-  console.log("testDel", formData);
   const response = axios.delete(server + "/tasks" + "/" + formData.id, {
     headers: getHeader(),
   });

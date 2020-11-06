@@ -109,9 +109,15 @@ function* reqCreateTasks({ formData }) {
 
 function* reqUpdateTasks({ formData }) {
   try {
-    const response = yield call(showToken, formData);
+    const response = yield call(updateTasks, formData);
     yield put(revUpdateTasks(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      yield put({
+        type: "FAILED_UPDATE_TASKS",
+        data: e.response.data.msg,
+      });
+    }
     if (developerMode) {
       console.log(e);
     }

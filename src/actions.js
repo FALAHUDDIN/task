@@ -44,6 +44,7 @@ export const reqUpdateTasks = (formData) => ({
 });
 export const RECEIVE_UPDATE_TASKS = "RECEIVE_UPDATE_TASKS";
 export const revUpdateTasks = (data) => ({ type: RECEIVE_UPDATE_TASKS, data });
+export const FAILED_UPDATE_TASKS = "FAILED_UPDATE_TASKS";
 
 export const REQUEST_DELETE_TASKS = "REQUEST_DELETE_TASKS";
 export const reqDeleteTasks = (formData) => ({

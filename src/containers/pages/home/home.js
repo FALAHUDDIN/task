@@ -4,6 +4,7 @@ import {
   reqShowDashboard,
   reqShowTasks,
   reqCreateTasks,
+  reqUpdateTasks,
   reqDeleteTasks,
 } from "../../../actions";
 
@@ -32,6 +33,7 @@ export default function Home() {
   const revShowDashboard = useSelector((state) => state.data.revShowDashboard);
   const revShowTasks = useSelector((state) => state.data.revShowTasks);
   const revCreateTasks = useSelector((state) => state.data.revCreateTasks);
+  const revUpdateTasks = useSelector((state) => state.data.revUpdateTasks);
   const revDeleteTasks = useSelector((state) => state.data.revDeleteTasks);
   const dispatch = useDispatch();
   const onReqShowDashboard = () => {
@@ -43,6 +45,9 @@ export default function Home() {
   const onReqCreateTasks = (formData) => {
     return dispatch(reqCreateTasks(formData));
   };
+  const onReqUpdateTasks = (formData) => {
+    return dispatch(reqUpdateTasks(formData));
+  };
   const onReqDeleteTasks = (formData) => {
     return dispatch(reqDeleteTasks(formData));
   };
@@ -51,7 +56,7 @@ export default function Home() {
   useEffect(() => {
     onReqShowDashboard();
     onReqShowTasks();
-  }, [revCreateTasks, revDeleteTasks]);
+  }, [revCreateTasks, revUpdateTasks, revDeleteTasks]);
 
   //page function
   const handleBtnAddTask = () => {
@@ -75,6 +80,21 @@ export default function Home() {
       onReqCreateTasks(formData);
     }
     handleResetAddTask();
+  };
+  const handleBoxCrossTask = (id, tick) => {
+    let formData = { id: id, completed: tick };
+    if (tick) {
+      formData = {
+        id,
+        completed: false,
+      };
+    } else {
+      formData = {
+        id,
+        completed: true,
+      };
+    }
+    onReqUpdateTasks(formData);
   };
   const handleBtnDelTask = (id) => {
     let formData = {
@@ -116,7 +136,16 @@ export default function Home() {
               Latest Created Tasks:
               {revShowDashboard.latestTasks.map((x, index) => {
                 let keyX = index;
-                return <div key={keyX}>-{x.name}</div>;
+                return (
+                  <div
+                    key={keyX}
+                    style={{
+                      textDecoration: x.completed ? "line-through" : "unset",
+                    }}
+                  >
+                    {x.name}
+                  </div>
+                );
               })}
             </div>
             <div>
@@ -138,7 +167,25 @@ export default function Home() {
                   let keyX = index;
                   return (
                     <div key={keyX}>
-                      <span>{x.name}</span>
+                      <span
+                        style={{
+                          border: x.completed
+                            ? "1px solid green"
+                            : "1px solid red",
+                        }}
+                        onClick={() => handleBoxCrossTask(x._id, x.completed)}
+                      >
+                        click
+                      </span>
+                      <span
+                        style={{
+                          textDecoration: x.completed
+                            ? "line-through"
+                            : "unset",
+                        }}
+                      >
+                        {x.name}
+                      </span>
                       <button>Edit</button>
                       <button onClick={() => handleBtnDelTask(x._id)}>
                         Delete

@@ -9,6 +9,7 @@ import {
   FAILED_SHOW_DASHBOARD,
   FAILED_SHOW_TASKS,
   FAILED_CREATE_TASKS,
+  FAILED_UPDATE_TASKS,
   FAILED_DELETE_TASKS,
 } from "../actions";
 
@@ -60,6 +61,18 @@ export function data(state = {}, { type, data }) {
       return {
         ...state,
         revCreateTasks: "",
+        errorMessage: data,
+      };
+    case RECEIVE_UPDATE_TASKS:
+      return {
+        ...state,
+        revUpdateTasks: data,
+        errorMessage: "",
+      };
+    case FAILED_UPDATE_TASKS:
+      return {
+        ...state,
+        revUpdateTasks: "",
         errorMessage: data,
       };
     case RECEIVE_DELETE_TASKS:

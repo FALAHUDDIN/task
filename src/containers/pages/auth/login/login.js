@@ -1,8 +1,17 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
+import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import { reqShowToken } from "../../../../actions";
 
 export default function Login() {
+  const useStyles = createUseStyles({
+    container: {
+      height: "100%",
+      border: "1px solid blue",
+    },
+  });
+  const login = useStyles();
+
   // main state
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({
@@ -11,30 +20,13 @@ export default function Login() {
     }),
     { name: "", apiKey: "" }
   );
-  const [errorOutput, setErrorOutput] = useReducer(
-    (state, newState) => ({
-      ...state,
-      ...newState,
-    }),
-    { errorMessage: "" }
-  );
 
   // history, sagas, redux
-  const errorMessage = useSelector((state) => state.errorMessage);
   const revShowToken = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const onReqShowToken = (formData) => {
     return dispatch(reqShowToken(formData));
   };
-
-  //component mount, update, unmount
-  useEffect(() => {
-    if (errorMessage) {
-      setErrorOutput({
-        errorMessage: errorMessage,
-      });
-    }
-  }, [errorMessage, revShowToken]);
 
   //page function
   const handleSignin = (event) => {
@@ -58,22 +50,26 @@ export default function Login() {
     }
   };
   return (
-    <div>
+    <div className={login.container}>
       <input
         name="name"
         type="text"
         value={userInput.name}
         onChange={handleInputChange}
       ></input>
-      <input
-        name="apiKey"
-        type="password"
-        value={userInput.apiKey}
-        onChange={handleInputChange}
-      ></input>
+      <form>
+        <input
+          name="apiKey"
+          type="password"
+          autoComplete="username"
+          value={userInput.apiKey}
+          onChange={handleInputChange}
+        ></input>
+      </form>
       <button onClick={handleSignin}>
         <div>Login</div>
       </button>
+      <div>{revShowToken.errorMessage}</div>
     </div>
   );
 }

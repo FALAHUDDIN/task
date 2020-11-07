@@ -4,9 +4,11 @@ import axios from "axios";
 const server = "https://dev.teledirectasia.com:3092";
 const getHeader = () => {
   const xToken = Cookies.getJSON("token").token;
-  return {
-    Authorization: `Bearer ${xToken}`,
-  };
+  if (xToken) {
+    return {
+      Authorization: `Bearer ${xToken}`,
+    };
+  }
 };
 
 // Request
@@ -37,14 +39,14 @@ export const createTasks = (formData) => {
 };
 
 export const updateTasks = (formData) => {
-  const response = axios.put(server + "/tasks" + "/" + formData.id, formData, {
+  const response = axios.put(server + "/tasks/" + formData.id, formData, {
     headers: getHeader(),
   });
   return response;
 };
 
 export const deleteTasks = (formData) => {
-  const response = axios.delete(server + "/tasks" + "/" + formData.id, {
+  const response = axios.delete(server + "/tasks/" + formData.id, {
     headers: getHeader(),
   });
   return response;

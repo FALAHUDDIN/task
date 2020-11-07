@@ -76,7 +76,7 @@ export default function Home() {
   useEffect(() => {
     onReqShowDashboard();
     onReqShowTasks();
-  }, [revCreateTasks, revUpdateTasks, revDeleteTasks]);
+  }, [revCreateTasks, revUpdateTasks, revDeleteTasks]); // eslint-disable-line react-hooks/exhaustive-deps
 
   //page function
   const handleBtnAddTask = () => {

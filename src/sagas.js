@@ -22,7 +22,7 @@ import {
   revUpdateTasks,
   revDeleteTasks,
 } from "./actions";
-const developerMode = true;
+const developerMode = !true;
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mySaga() {
@@ -93,16 +93,14 @@ function* reqCreateTasks({ formData }) {
     const response = yield call(createTasks, formData);
     yield put(revCreateTasks(response.data));
   } catch (e) {
-    {
-      if (e.response.status === 401) {
-        yield put({
-          type: "FAILED_CREATE_TASKS",
-          data: e.response.data.msg,
-        });
-      }
-      if (developerMode) {
-        console.log(e);
-      }
+    if (e.response.status === 401) {
+      yield put({
+        type: "FAILED_CREATE_TASKS",
+        data: e.response.data.msg,
+      });
+    }
+    if (developerMode) {
+      console.log(e);
     }
   }
 }

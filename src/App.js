@@ -48,9 +48,9 @@ export default function App() {
   return (
     <div className={app.container}>
       <Provider store={store}>
-        {/* <HttpsRedirect> */}
-        <RouteControl />
-        {/* </HttpsRedirect> */}
+        <HttpsRedirect>
+          <RouteControl />
+        </HttpsRedirect>
       </Provider>
     </div>
   );

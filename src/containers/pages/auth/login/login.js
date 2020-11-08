@@ -6,8 +6,63 @@ import { reqShowToken } from "../../../../actions";
 export default function Login() {
   const useStyles = createUseStyles({
     container: {
+      display: "flex",
+      flexDirection: "column",
       height: "100%",
-      border: "1px solid blue",
+    },
+    content: {
+      width: "296px",
+      height: "249px",
+      borderRadius: "12px",
+      boxShadow: "0px 3px 6px #00000029",
+      margin: "auto",
+      padding: "24px",
+      backgroundColor: "#FFFFFF",
+    },
+    txtLogin: {
+      display: "flex",
+      alignItems: "center",
+      height: "24px",
+      color: "#537178",
+      fontSize: "20px",
+    },
+    errBoxLogin: {
+      display: "flex",
+      alignItems: "center",
+      height: "24px",
+      fontSize: "11px",
+      color: "#d82424",
+    },
+    iptId: {
+      padding: "0 16px",
+      width: "100%",
+      height: "40px",
+      backgroundColor: "#EEF1F8",
+      border: "unset",
+      borderRadius: "8px",
+      color: "#7A7D7E",
+      fontSize: "14px",
+    },
+    iptnName: {
+      marginTop: "12px",
+      padding: "0 16px",
+      width: "100%",
+      height: "40px",
+      backgroundColor: "#EEF1F8",
+      border: "unset",
+      borderRadius: "8px",
+      color: "#7A7D7E",
+      fontSize: "14px",
+    },
+    btnLogin: {
+      marginTop: "12px",
+      width: "100%",
+      height: "40px",
+      border: "unset",
+      backgroundColor: "#5285EC",
+      borderRadius: "8px",
+      color: "#FFFFFF",
+      fontSize: "14px",
     },
   });
   const login = useStyles();
@@ -29,13 +84,15 @@ export default function Login() {
   };
 
   //page function
-  const handleSignin = (event) => {
-    event.preventDefault();
-    let formData = {
-      name: userInput.name,
-      apiKey: userInput.apiKey,
-    };
-    onReqShowToken(formData);
+  const handleSignin = () => {
+    console.log("haluuu");
+    if (userInput.name !== "" && userInput.apiKey !== "") {
+      let formData = {
+        name: userInput.name,
+        apiKey: userInput.apiKey,
+      };
+      onReqShowToken(formData);
+    }
   };
   const handleInputChange = (event) => {
     const name = event.target.name;
@@ -49,27 +106,42 @@ export default function Login() {
       });
     }
   };
+
   return (
     <div className={login.container}>
-      <input
-        name="name"
-        type="text"
-        value={userInput.name}
-        onChange={handleInputChange}
-      ></input>
-      <form>
-        <input
-          name="apiKey"
-          type="password"
-          autoComplete="username"
-          value={userInput.apiKey}
-          onChange={handleInputChange}
-        ></input>
-      </form>
-      <button onClick={handleSignin}>
-        <div>Login</div>
-      </button>
-      <div>{revShowToken.errorMessage}</div>
+      <div className={login.content}>
+        <div className={login.txtLogin}>Login</div>
+        <div className={login.errBoxLogin}>{revShowToken.errorMessage}</div>
+        <form>
+          <input
+            className={login.iptId}
+            name="name"
+            type="text"
+            placeholder="Id"
+            value={userInput.name}
+            onChange={handleInputChange}
+            autoFocus
+            required
+          ></input>
+          <input
+            className={login.iptnName}
+            name="apiKey"
+            type="password"
+            placeholder="Name"
+            autoComplete="username"
+            value={userInput.apiKey}
+            onChange={handleInputChange}
+            required
+          ></input>
+          <button
+            type="submit"
+            className={login.btnLogin}
+            onClick={handleSignin}
+          >
+            <div>Login</div>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

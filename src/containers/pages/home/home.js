@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect } from "react";
+import { createUseStyles } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import {
   reqShowDashboard,
@@ -7,8 +8,43 @@ import {
   reqUpdateTasks,
   reqDeleteTasks,
 } from "../../../actions";
+import Header from "../../../components/header/header";
+import TaskCompleted from "../../../components/taskCompleted/taskCompleted";
+import TaskLatest from "../../../components/taskLatest/taskLatest";
+import TaskPie from "../../../components/taskPie/taskPie";
+import TaskFilter from "../../../components/taskFilter/taskFilter";
+import TaskList from "../../../components/taskList/taskList";
+import TaskAdd from "../../../components/taskAdd/taskAdd";
+import TaskEdit from "../../../components/taskEdit/taskEdit";
+import TaskNo from "../../../components/taskNo/taskNo";
+import TaskLoading from "../../../components/taskLoading/taskLoading";
 
 export default function Home() {
+  const useStyles = createUseStyles({
+    container: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+    },
+    content: {
+      height: "calc(100% - 72px)",
+      overflow: "auto",
+    },
+    contentTaskRow: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    "@media (min-width: 1024px)": {
+      content: {
+        padding: "22px 120px",
+      },
+      contentTaskRow: {
+        flexDirection: "row",
+      },
+    },
+  });
+  const home = useStyles();
+
   // main state
   const [homeState, setHomeState] = useReducer(
     (state, newState) => ({
@@ -109,7 +145,7 @@ export default function Home() {
       };
       onReqCreateTasks(formData);
     }
-    handleResetAddTask();
+    handleCancelAddTask();
   };
   const handleEditTask = () => {
     if (editTaskState.taskName !== "") {
@@ -119,13 +155,19 @@ export default function Home() {
       };
       onReqUpdateTasks(formData);
     }
-    handleResetAddTask();
+    handleCancelEditTask();
   };
-  const handleResetAddTask = () => {
+  const handleCancelAddTask = () => {
     setHomeState({
       isAddTask: false,
     });
     setAddTaskState({ taskName: "" });
+  };
+  const handleCancelEditTask = () => {
+    setHomeState({
+      isEditTask: false,
+    });
+    setEditTaskState({ taskName: "" });
   };
   const handleBoxCrossTask = (id, tick) => {
     let formData = { id: id, completed: tick };
@@ -162,138 +204,57 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className={home.container}>
+      <Header />
       {revShowDashboard ? (
         revShowDashboard && revShowDashboard.latestTasks.length !== 0 ? (
-          <div>
+          <div className={home.content}>
             {homeState.isAddTask && (
-              <div>
-                <div>+ New Task</div>
-                <input
-                  name="taskName"
-                  type="text"
-                  value={addTaskState.taskName}
-                  onChange={handleInputAddChange}
-                  placeholder="Task Name"
-                ></input>
-                <button onClick={() => handleAddTask()}>+ New Task</button>
-              </div>
+              <TaskAdd
+                handleCancelAddTask={handleCancelAddTask}
+                addTaskState={addTaskState}
+                handleInputAddChange={handleInputAddChange}
+                handleAddTask={handleAddTask}
+              />
             )}
             {homeState.isEditTask && (
-              <div>
-                <div>Edit Task</div>
-                <input
-                  name="taskName"
-                  type="text"
-                  value={editTaskState.taskName}
-                  onChange={handleInputEditChange}
-                  placeholder="Task Name"
-                ></input>
-                <button onClick={() => handleEditTask()}>Edit Task</button>
-              </div>
+              <TaskEdit
+                handleCancelEditTask={handleCancelEditTask}
+                editTaskState={editTaskState}
+                handleInputEditChange={handleInputEditChange}
+                handleEditTask={handleEditTask}
+              />
             )}
-            <div>
-              Task Completed:
-              {revShowDashboard.tasksCompleted}/{revShowDashboard.totalTasks}
+            <div className={home.contentTaskRow}>
+              <TaskCompleted revShowDashboard={revShowDashboard} />
+              <TaskLatest revShowDashboard={revShowDashboard} />
+              <TaskPie revShowDashboard={revShowDashboard} />
             </div>
-            <div>
-              Latest Created Tasks:
-              {revShowDashboard.latestTasks.map((x, index) => {
-                let keyX = index;
-                return (
-                  <div
-                    key={keyX}
-                    style={{
-                      textDecoration: x.completed ? "line-through" : "unset",
-                    }}
-                  >
-                    {x.name}
-                  </div>
-                );
-              })}
-            </div>
-            <div>
-              Pie Chart:
-              {revShowDashboard.tasksCompleted}/{revShowDashboard.totalTasks}
-            </div>
-            <div>Tasks:</div>
-            <input
-              name="taskName"
-              type="text"
-              value={filterTaskState.taskName}
-              onChange={handleInputFilterChange}
-              placeholder="Search by task name"
-            ></input>
-            <div>
-              <button onClick={() => handleBtnAddTask()}>+ New Task</button>
-            </div>
-            {revShowTasks &&
-              revShowTasks.tasks.length !== 0 &&
-              revShowTasks.tasks
-                .sort(
-                  (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-                )
-                .filter((c) => {
-                  let found = c.name
-                    .toLowerCase()
-                    .includes(filterTaskState.taskName.toLowerCase());
-                  if (filterTaskState.taskName) {
-                    return found;
-                  } else return c;
-                })
-                .map((x, index) => {
-                  let keyX = index;
-                  return (
-                    <div key={keyX}>
-                      <span
-                        style={{
-                          border: x.completed
-                            ? "1px solid green"
-                            : "1px solid red",
-                        }}
-                        onClick={() => handleBoxCrossTask(x._id, x.completed)}
-                      >
-                        click
-                      </span>
-                      <span
-                        style={{
-                          textDecoration: x.completed
-                            ? "line-through"
-                            : "unset",
-                        }}
-                      >
-                        {x.name}
-                      </span>
-                      <button onClick={() => handleBtnEditTask(x._id, x.name)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleBtnDelTask(x._id)}>
-                        Delete
-                      </button>
-                    </div>
-                  );
-                })}
+            <TaskFilter
+              filterTaskState={filterTaskState}
+              handleInputFilterChange={handleInputFilterChange}
+              handleBtnAddTask={handleBtnAddTask}
+            />
+            <TaskList
+              revShowTasks={revShowTasks}
+              filterTaskState={filterTaskState}
+              handleBoxCrossTask={handleBoxCrossTask}
+              handleBtnEditTask={handleBtnEditTask}
+              handleBtnDelTask={handleBtnDelTask}
+            />
           </div>
         ) : homeState.isAddTask ? (
-          <div>
-            <div>+ New Task</div>
-            <input
-              name="taskName"
-              type="text"
-              value={addTaskState.taskName}
-              onChange={handleInputAddChange}
-              placeholder="Task Name"
-            ></input>
-            <button onClick={() => handleAddTask()}>+ New Task</button>
-          </div>
+          <TaskAdd
+            handleCancelAddTask={handleCancelAddTask}
+            addTaskState={addTaskState}
+            handleInputAddChange={handleInputAddChange}
+            handleAddTask={handleAddTask}
+          />
         ) : (
-          <div>
-            <div>You have no task</div>
-            <button onClick={() => handleBtnAddTask()}>+ New Task</button>
-          </div>
+          <TaskNo handleBtnAddTask={handleBtnAddTask} />
         )
       ) : (
-        <div>Loading</div>
+        <TaskLoading />
       )}
     </div>
   );

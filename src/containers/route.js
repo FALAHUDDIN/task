@@ -6,25 +6,11 @@ import Home from "./pages/home/home";
 
 const token = Cookies.getJSON("token");
 export default function RouteControl() {
-  // const revShowToken = useSelector((state) => state.data);
-  // const dispatch = useDispatch();
-  // const onReqShowToken = () => {
-  //   return dispatch(reqShowToken());
-  // };
-
-  // const [userIntend, setUserIntend] = useState("");
-
-  // useEffect(() => {
-  // setUserIntend(window.location.pathname);
-  // }, [revShowToken]);
-
   // function
   const isLogin = () => {
     if (token) {
       return true;
-      // setUserIntend("/home");
     } else {
-      // setUserIntend("/login");
       return false;
     }
   };

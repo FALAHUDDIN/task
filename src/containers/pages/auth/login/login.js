@@ -85,7 +85,6 @@ export default function Login() {
 
   //page function
   const handleSignin = () => {
-    console.log("haluuu");
     if (userInput.name !== "" && userInput.apiKey !== "") {
       let formData = {
         name: userInput.name,
@@ -115,21 +114,21 @@ export default function Login() {
         <form>
           <input
             className={login.iptId}
-            name="name"
+            name="apiKey"
             type="text"
             placeholder="Id"
-            value={userInput.name}
+            value={userInput.apiKey}
             onChange={handleInputChange}
             autoFocus
             required
           ></input>
           <input
             className={login.iptnName}
-            name="apiKey"
-            type="password"
+            name="name"
+            type="text"
             placeholder="Name"
             autoComplete="username"
-            value={userInput.apiKey}
+            value={userInput.name}
             onChange={handleInputChange}
             required
           ></input>

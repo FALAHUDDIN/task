@@ -29,7 +29,7 @@ export default function TaskList(props) {
       border: "2px solid #95A4AB",
     },
     icnTick: {
-      marginTop: "-7px",
+      marginTop: "-15px",
       marginLeft: "-4px",
       width: "30px !important",
       color: "#707070",

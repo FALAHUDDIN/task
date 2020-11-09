@@ -111,7 +111,7 @@ export default function Login() {
       <div className={login.content}>
         <div className={login.txtLogin}>Login</div>
         <div className={login.errBoxLogin}>{revShowToken.errorMessage}</div>
-        <form>
+        <form onSubmit={handleSignin}>
           <input
             className={login.iptId}
             name="apiKey"
@@ -130,11 +130,7 @@ export default function Login() {
             value={userInput.name}
             onChange={handleInputChange}
           ></input>
-          <button
-            type="submit"
-            className={login.btnLogin}
-            onClick={handleSignin}
-          >
+          <button type="submit" className={login.btnLogin}>
             <div>Login</div>
           </button>
         </form>

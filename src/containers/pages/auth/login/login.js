@@ -85,7 +85,7 @@ export default function Login() {
 
   //page function
   const handleSignin = () => {
-    if (userInput.name !== "" && userInput.apiKey !== "") {
+    if ((userInput.name, userInput.apiKey !== "")) {
       let formData = {
         name: userInput.name,
         apiKey: userInput.apiKey,
@@ -120,7 +120,6 @@ export default function Login() {
             value={userInput.apiKey}
             onChange={handleInputChange}
             autoFocus
-            required
           ></input>
           <input
             className={login.iptnName}
@@ -130,7 +129,6 @@ export default function Login() {
             autoComplete="username"
             value={userInput.name}
             onChange={handleInputChange}
-            required
           ></input>
           <button
             type="submit"

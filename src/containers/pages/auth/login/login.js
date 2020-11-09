@@ -84,7 +84,8 @@ export default function Login() {
   };
 
   //page function
-  const handleSignin = () => {
+  const handleSignin = (e) => {
+    e.preventDefault();
     if ((userInput.name, userInput.apiKey !== "")) {
       let formData = {
         name: userInput.name,
